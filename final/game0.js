@@ -242,7 +242,6 @@ The user collects 20 balls to win while avoiding the npcs
 			case "x": controls.down = true; break;
 			case "m": controls.speed = 30; break;
       			case " ": controls.fly = true; break;
-    			case "r": controls.reset = true; break;
 
 
 			// switch cameras
@@ -270,9 +269,8 @@ The user collects 20 balls to win while avoiding the npcs
 			case "d": controls.right = false; break;
 			case "z": controls.up    = false; break;
 			case "x": controls.down  = false; break;
-			case "m": controls.speed = 10; break;
+			case "m": controls.speed = 30; break;
       		 	case " ": controls.fly = false; break;
-    			case "r": controls.reset = false; break;
 		}
 	}
 
