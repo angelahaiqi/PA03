@@ -97,24 +97,6 @@ The user collects 20 balls to win while avoiding the npcs
 
 	}
 
-	function soundEffect(file){
-		// create an AudioListener and add it to the camera
-		var listener = new THREE.AudioListener();
-		camera.add( listener );
-
-		// create a global audio source
-		var sound = new THREE.Audio( listener );
-
-		// load a sound and set it as the Audio object's buffer
-		var audioLoader = new THREE.AudioLoader();
-		audioLoader.load( '/sounds/'+file, function( buffer ) {
-			sound.setBuffer( buffer );
-			sound.setLoop( false );
-			sound.setVolume( 0.5 );
-			sound.play();
-		});
-	}
-
 	/* We don't do much here, but we could do more!
 	*/
 	function initScene(){
@@ -152,24 +134,6 @@ The user collects 20 balls to win while avoiding the npcs
 		light.shadow.camera.far = 500      // default
 		return light;
 	}
-
-
-
-	function createBoxMesh(color){
-		var geometry = new THREE.BoxGeometry( 1, 1, 1);
-		var material = new THREE.MeshLambertMaterial( { color: color} );
-		mesh = new Physijs.BoxMesh( geometry, material );
-    //mesh = new Physijs.BoxMesh( geometry, material,0 );
-		mesh.castShadow = true;
-		return mesh;
-	}
-
-	/*function create
-	var geometry = new THREE.ConeBufferGeometry( 5, 20, 32 );
-	var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-	var cone = new THREE.Mesh( geometry, material );
-	scene.add( cone );
-	*/
 
 	function createGround(image){
 		// creating a textured plane which receives shadows
@@ -277,8 +241,8 @@ The user collects 20 balls to win while avoiding the npcs
 			case "z": controls.up = true; break;
 			case "x": controls.down = true; break;
 			case "m": controls.speed = 30; break;
-      case " ": controls.fly = true; break;
-    	case "r": controls.reset = true; break;
+      			case " ": controls.fly = true; break;
+    			case "r": controls.reset = true; break;
 
 
 			// switch cameras
@@ -307,8 +271,8 @@ The user collects 20 balls to win while avoiding the npcs
 			case "z": controls.up    = false; break;
 			case "x": controls.down  = false; break;
 			case "m": controls.speed = 10; break;
-      case " ": controls.fly = false; break;
-    	case "r": controls.reset = false; break;
+      		 	case " ": controls.fly = false; break;
+    			case "r": controls.reset = false; break;
 		}
 	}
 
@@ -349,40 +313,5 @@ The user collects 20 balls to win while avoiding the npcs
     }
 		avatar.material.color.b=0
   }
-
-
-
-
-
-
-	function animate() {
-
-		requestAnimationFrame( animate );
-
-
-		switch(gameState.scene) {
-			case "start":
-				renderer.render(startScene, startCamera);
-				break;
-			case "youwon":
-				renderer.render( endScene, endCamera );
-				break;
-			case "youlose":
-				renderer.render( loseScene, loseCamera );
-				break;
-
-			case "main":
-				updateAvatar();
-				edgeCam.lookAt(avatar.position);
-	    			scene.simulate();
-				if (gameState.camera!= 'none'){
-					renderer.render( scene, gameState.camera );
-				}
-				break;
-
-			default:
-			  console.log("don't know the scene "+gameState.scene);
-
-		}
 
 	}
