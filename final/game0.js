@@ -165,9 +165,6 @@ The user flies a bird through the sky
 			coin.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 					if (other_object==avatar){
-            //scene.remove(ball);  // this isn't working ...
-						// make the ball drop below the scene ..
-						// threejs doesn't let us remove it from the schene...
 						this.position.y = this.position.y - 100;
 						this.__dirtyPosition = true;
 					}
