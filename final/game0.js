@@ -193,7 +193,7 @@ The user flies a bird through the sky
 		}	
 	} */	
 
-	function createCloud(){
+	/*function createCloud(){
 		var geometry1 = new THREE.SphereGeometry( 5, 10, 10 );
 		var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
 		var sphere1 = new THREE.Mesh( geometry1, material );
@@ -203,7 +203,7 @@ The user flies a bird through the sky
 		sphere2.position.set(15, 30, 10);
 		var sphere3 = new THREE.Mesh( geometry2, material );
 		sphere3.position.set(25, 30, 10);
-	}
+	}*/
 
 	function initDove() {
 			var loader = new THREE.OBJLoader();
