@@ -53,10 +53,13 @@ The user flies a bird through the sky
 		camera.lookAt(0,0,0);
 
 		// create the ground and the skybox
-		var ground = createGround('sand.jpg');
-		scene.add(ground);
-		var skybox = createSkyBox('sky.png',1);
-		scene.add(skybox);
+ 		var ground = createGround('sand.jpg');
+ 		scene.add(ground);
+-		var skybox = createSkyBox('sky.png',1);
++		var skybox = createSkyBox('sky_texture.png',1);
+ 		scene.add(skybox);
+ 
+ 			// create the avatar
 
 		// create the avatar
 		avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
