@@ -153,6 +153,36 @@ The user flies a bird through the sky
 
 
 	}
+	function addCoins(){
+		var numCoins = 6;
+		var i;
+
+		for(i=0;i<numCoins;i++){
+			var ball = createCoin();
+			ball.position.set(randN(80)-50,30,randN(80)-50);
+			scene.add(ball);
+
+			ball.addEventListener( 'collision',
+				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+					if (other_object==avatar){
+            //scene.remove(ball);  // this isn't working ...
+						// make the ball drop below the scene ..
+						// threejs doesn't let us remove it from the schene...
+						this.position.y = this.position.y - 100;
+						this.__dirtyPosition = true;
+					}
+				}
+			)
+		}
+	}
+	function createCoin(){
+		//var geometry = new THREE.SphereGeometry( 4, 20, 20);
+		var geometry = new THREE.RingGeometry( 1, 5, 32 );
+		var material = new THREE.MeshBasicMaterial( { color: 0xffff00, side: THREE.DoubleSide } );
+		var mesh = new THREE.Mesh( geometry, material );
+		scene.add( mesh );
+	}
+
 
 	function addClouds() {
 		for (i = 0; i <= 30; i++) {
