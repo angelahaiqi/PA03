@@ -154,6 +154,14 @@ The user flies a bird through the sky
 
 	}
 
+	function addClouds() {
+		for (i = 0; i <= 30; i++) {
+			var cloud = createCloud();
+			cloud.position.set(randN(80)-50,30,randN(80)-50);
+			scene.add(cloud);
+		}	
+	}	
+
 	function createCloud(){
 		var geometry1 = new THREE.SphereGeometry( 5, 10, 10 );
 		var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
