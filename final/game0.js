@@ -53,7 +53,7 @@ The user flies a bird through the sky
 		camera.lookAt(0,0,0);
 
 		// create the ground and the skybox
- 		var ground = createGround('sand.jpg');
+ 		var ground = createGround('ground.png');
  		scene.add(ground);
 		var skybox = createSkyBox('sky_texture.png',1);
  		scene.add(skybox);
