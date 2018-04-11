@@ -10,7 +10,7 @@ The user flies a bird through the sky
 	// in the animation code
 	var scene, renderer;  // all threejs programs need these
 	var camera, avatarCam, edgeCam;  // we have two cameras in the main scene
-	var avatar; var cactus;
+	var avatar; var dove;
 	// here are some mesh objects ...
 
 	var controls =
@@ -62,7 +62,7 @@ The user flies a bird through the sky
 
 		// create the avatar
 		avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		initCactus();
+		initDove();
 		avatarCam.translateY(-4);
 		avatarCam.translateZ(3);
 		//scene.add(avatar);
@@ -167,29 +167,29 @@ The user flies a bird through the sky
 		sphere3.setY(sphere1.y+1);
 	}
 
-	function initCactus() {
+	function initDove() {
 			var loader = new THREE.OBJLoader();
-			loader.load("../models/cactus.obj",
+			loader.load("../models/dove.obj",
 					function ( obj ) {
-						console.log("loading cactus.obj file");
-						cactus = obj;
+						console.log("loading dove.obj file");
+						dove = obj;
 
-						var geometry = cactus.children[0].geometry;
-						var material = cactus.children[0].material;
-						cactus = new Physijs.BoxMesh(geometry, material);
+						var geometry = dove.children[1].geometry;
+						var material = dove.children[1].material;
+						dove = new Physijs.BoxMesh(geometry, material);
 
 						avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
 						gameState.camera = avatarCam;
 
 						avatarCam.position.set(0,6,-15);
 						avatarCam.lookAt(0,4,10);
-						cactus.add(avatarCam);
-						cactus.position.set(-40,20,-40);
-						cactus.castShadow = false;
-						scene.add( cactus  );
-						avatar=cactus;
+						dove.add(avatarCam);
+						dove.position.set(-40,20,-40);
+						dove.castShadow = false;
+						scene.add( dove  );
+						avatar=dove;
 
-						console.log("cactus has been added");
+						console.log("dove has been added");
 					},
 
 					function(xhr) {
@@ -299,5 +299,5 @@ The user flies a bird through the sky
 				avatarCam.lookAt(0,4,10);
 				gameState.scene = 'main';
     }
-		avatar.material.color.b=0
+		avatar.material.color.b=3;
   }
