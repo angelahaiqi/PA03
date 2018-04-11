@@ -57,10 +57,10 @@ The user flies a bird through the sky
  		scene.add(ground);
 		var skybox = createSkyBox('sky_texture.png',1);
  		scene.add(skybox);
- 
+ 		
+		// create the cloud
 		initCloud();
 		
- 			// create the avatar
 		var sun = createSun();
 		scene.add(sun);
 		// create the avatar
@@ -202,7 +202,7 @@ The user flies a bird through the sky
 					cloud.position.set(-10,20,10);
 					scene.add(cloud);
 					cloud.castShadow = true;
-					// return cloud;
+			
 					console.log("just added cloud");
 				},
 
