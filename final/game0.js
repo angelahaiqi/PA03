@@ -58,6 +58,8 @@ The user flies a bird through the sky
 		var skybox = createSkyBox('sky_texture.png',1);
  		scene.add(skybox);
  
+		initCloud();
+		
  			// create the avatar
 		var cloud = createCloud();
 		scene.add(cloud);
@@ -185,6 +187,34 @@ The user flies a bird through the sky
 		scene.add( mesh );
 	}
 
+	function initCloud(){
+		var loader = new THREE.OBJLoader();
+		loader.load("../models/cloud.obj",
+				function ( obj) {
+					console.log("loading cloud file");
+					console.dir(obj);
+					cloud = obj;
+
+					var geometry = cloud.children[0].geometry;
+					var material = cloud.children[0].material;
+					cloud = new Physijs.BoxMesh(geometry,material,0);
+
+					cloud.position.set(-10,20,10);
+					scene.add(cloud);
+					cloud.castShadow = true;
+					// return cloud;
+					console.log("just added cloud");
+				},
+
+				function(xhr){
+					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+				},
+
+				function(err){
+					console.log("error in loading: "+err);
+				}
+			)
+		}
 
 	/* function addClouds() {
 		for (i = 0; i <= 30; i++) {
