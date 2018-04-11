@@ -234,6 +234,7 @@ The user flies a bird through the sky
 		//sphere2.position.set(15, 30, 10);
 		//var sphere3 = new THREE.Mesh( geometry2, material );
 		//sphere3.position.set(25, 30, 10);
+		return sphere1;
 	}
 
 	function initDove() {
