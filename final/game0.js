@@ -1,7 +1,7 @@
 /*
 Game
 This is a ThreeJS program which implements a simple game
-The user collects 20 balls to win while avoiding the npcs
+The user flies a bird through the sky
 
 */
 
@@ -23,7 +23,7 @@ The user collects 20 balls to win while avoiding the npcs
 
 
 	// Here is the main game control
-  init(); //
+  	init(); //
 	initControls();
 	animate();  // start the animation loop!
 
@@ -32,7 +32,7 @@ The user collects 20 balls to win while avoiding the npcs
 	  To initialize the scene, we initialize each of its components
 	*/
 	function init(){
-    initPhysijs();
+    		initPhysijs();
 		scene = initScene();
 		initRenderer();
 		createMainScene();
@@ -40,38 +40,34 @@ The user collects 20 balls to win while avoiding the npcs
 
 
 	function createMainScene(){
-      // setup lighting
-			var light1 = createPointLight();
-			light1.position.set(0,200,20);
-			scene.add(light1);
-			var light0 = new THREE.AmbientLight( 0xffffff,0.25);
-			scene.add(light0);
+      		// setup lighting
+		var light1 = createPointLight();
+		light1.position.set(0,200,20);
+		scene.add(light1);
+		var light0 = new THREE.AmbientLight( 0xffffff,0.25);
+		scene.add(light0);
 
-			// create main camera
-			camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			camera.position.set(0,50,0);
-			camera.lookAt(0,0,0);
+		// create main camera
+		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		camera.position.set(0,50,0);
+		camera.lookAt(0,0,0);
 
+		// create the ground and the skybox
+		var ground = createGround('sand.jpg');
+		scene.add(ground);
+		var skybox = createSkyBox('sky.png',1);
+		scene.add(skybox);
 
+		// create the avatar
+		avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		initCactus();
+		avatarCam.translateY(-4);
+		avatarCam.translateZ(3);
+		//scene.add(avatar);
+		gameState.camera = avatarCam;
 
-			// create the ground and the skybox
-			var ground = createGround('sand.jpg');
-			scene.add(ground);
-			var skybox = createSkyBox('sky_texture.png',1);
-			scene.add(skybox);
-
-			// create the avatar
-			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			initCactus();
-			//avatar = createAvatar();
-			//avatar.translateY(20);
-			avatarCam.translateY(-4);
-			avatarCam.translateZ(3);
-			//scene.add(avatar);
-			gameState.camera = avatarCam;
-
-			edgeCam = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 0.1, 1000 );
-      			edgeCam.position.set(20,20,10);
+		edgeCam = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		edgeCam.position.set(20,20,10);
 
 
 
@@ -80,7 +76,7 @@ The user collects 20 balls to win while avoiding the npcs
 	*/
 	function initScene(){
 		//scene = new THREE.Scene();
-    var scene = new Physijs.Scene();
+    		var scene = new Physijs.Scene();
 		return scene;
 	}
 
@@ -142,7 +138,7 @@ The user collects 20 balls to win while avoiding the npcs
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( k, k );
-		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide } );
 		//var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 		//var mesh = new THREE.Mesh( geometry, material );
 		var mesh = new THREE.Mesh( geometry, material, 0 );
