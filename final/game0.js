@@ -55,10 +55,9 @@ The user flies a bird through the sky
 		// create the ground and the skybox
  		var ground = createGround('sand.jpg');
  		scene.add(ground);
--		var skybox = createSkyBox('sky.png',1);
 +		var skybox = createSkyBox('sky_texture.png',1);
  		scene.add(skybox);
- 
+
  			// create the avatar
 
 		// create the avatar
