@@ -76,6 +76,10 @@ The user flies a bird through the sky
 	}
 	/* We don't do much here, but we could do more!
 	*/
+	function randN(n){
+		return Math.random()*n;
+	}
+
 	function initScene(){
 		//scene = new THREE.Scene();
     		var scene = new Physijs.Scene();
