@@ -301,3 +301,6 @@ The user flies a bird through the sky
     }
 		avatar.material.color.b=3;
   }
+function animate() {
+	requestAnimationFrame( animate );
+}
