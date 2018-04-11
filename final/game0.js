@@ -158,11 +158,11 @@ The user flies a bird through the sky
 		var i;
 
 		for(i=0;i<numCoins;i++){
-			var ball = createCoin();
-			ball.position.set(randN(80)-50,30,randN(80)-50);
-			scene.add(ball);
+			var coin = createCoin();
+			coin.position.set(randN(80)-50,30,randN(80)-50);
+			scene.add(coin);
 
-			ball.addEventListener( 'collision',
+			coin.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 					if (other_object==avatar){
             //scene.remove(ball);  // this isn't working ...
