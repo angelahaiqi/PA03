@@ -195,11 +195,11 @@ The user flies a bird through the sky
 		var sphere1 = new THREE.Mesh( geometry1, material );
 		var geometry2 = new THREE.SphereGeometry( 2, 5, 5 );
 		var sphere2 = new THREE.Mesh( geometry2, material );
-		sphere2.position.x(sphere1.x-5);
-		sphere2.position.y(sphere1.y-1);
+		sphere2.position.x(sphere1.position.x-5);
+		sphere2.position.y(sphere1.position.y-1);
 		var sphere3 = new THREE.Mesh( geometry2, material );
-		sphere3.position.x(sphere1.x+5);
-		sphere3.position.y(sphere1.y+1);
+		sphere3.position.x(sphere1.position.x+5);
+		sphere3.position.y(sphere1.position.y+1);
 	}
 
 	function initDove() {
