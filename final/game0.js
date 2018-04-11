@@ -196,7 +196,8 @@ The user flies a bird through the sky
 					cloud = obj;
 
 					var geometry = cloud.children[0].geometry;
-					var material = cloud.children[0].material;
+					//var material = cloud.children[0].material;
+					var material = new THREE.MeshLambertMaterial( {color: 0x1e90ff} );
 					cloud = new Physijs.BoxMesh(geometry,material,0);
 
 					cloud.position.set(-10,20,10);
