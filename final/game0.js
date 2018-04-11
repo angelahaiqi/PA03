@@ -55,9 +55,10 @@ The user flies a bird through the sky
 		// create the ground and the skybox
  		var ground = createGround('sand.jpg');
  		scene.add(ground);
+-		var skybox = createSkyBox('sky.png',1);
 +		var skybox = createSkyBox('sky_texture.png',1);
  		scene.add(skybox);
-
+ 
  			// create the avatar
 
 		// create the avatar
@@ -152,6 +153,19 @@ The user flies a bird through the sky
 		// we need to rotate the mesh 90 degrees to make it horizontal not vertical
 
 
+	}
+
+	function createCloud(){
+		var geometry1 = new THREE.SphereGeometry( 5, 10, 10 );
+		var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+		var sphere1 = new THREE.Mesh( geometry1, material );
+		var geometry2 = new THREE.SphereGeometry( 2, 5, 5 );
+		var sphere2 = new THREE.Mesh( geometry2, material );
+		sphere2.setX(sphere1.x-5);
+		sphere2.setY(sphere1.y-1);
+		var sphere3 = new THREE.Mesh( geometry2, material );
+		sphere3.setX(sphere1.x+5);
+		sphere3.setY(sphere1.y+1);
 	}
 
 	function initCactus() {
