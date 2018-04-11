@@ -13,13 +13,6 @@ The user collects 20 balls to win while avoiding the npcs
 	var avatar; var cactus;
 	// here are some mesh objects ...
 
-	var endScene, endCamera, endText;
-	var loseScene, loseCamera, loseText;
-
-
-
-
-
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false,
 				speed:10, fly:false, reset:false,
@@ -81,22 +74,8 @@ The user collects 20 balls to win while avoiding the npcs
       			edgeCam.position.set(20,20,10);
 
 
-			//playGameMusic();
 
 	}
-
-
-	function randN(n){
-		return Math.random()*n;
-	}
-	function initTextMesh(){
-		var loader = new THREE.FontLoader();
-		loader.load( '/fonts/helvetiker_regular.typeface.json',
-								 createTextMesh);
-		console.log("preparing to load the font");
-
-	}
-
 	/* We don't do much here, but we could do more!
 	*/
 	function initScene(){
