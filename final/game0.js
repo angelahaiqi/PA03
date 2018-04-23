@@ -142,7 +142,7 @@ The user flies a bird through the sky
 		var geometry = new THREE.SphereGeometry( 5, 10, 10 );
 		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
 		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 20, 60, 10 );
+		mesh.position.set( 20, 150, 10 );
 
 		return mesh;
 	}
