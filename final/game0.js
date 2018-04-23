@@ -3,8 +3,6 @@ Game
 This is a ThreeJS program which implements a simple game
 The user flies a bird through the sky
 */
-
-
 	// First we declare the variables that hold the objects we need
 	// in the animation code
 	var scene, renderer;  // all threejs programs need these
@@ -12,183 +10,175 @@ The user flies a bird through the sky
 	var avatar; var dove;
 	// here are some mesh objects ...
 
-
-
-
-
-
-	var controls =
-	     {fwd:false, bwd:false, left:false, right:false,
-				speed:10, fly:false, reset:false,
-		    camera:camera}
+	// var controls =
+	//      {fwd:false, bwd:false, left:false, right:false,
+	// 			speed:10, fly:false, reset:false,
+	// 	    camera:camera}
 
 	var gameState =
 	     {scene:'main', camera:'none' }
 
-
-	// Here is the main game control
   init(); //
 	initControls();
 	animate();  // start the animation loop!
 
-
-	/**
-	  To initialize the scene, we initialize each of its components
-	*/
 	function init(){
     initPhysijs();
-		scene = initScene();
+		initScene();
 		initRenderer();
 		createMainScene();
 	}
 
-
-	function createMainScene(){
-      // setup lighting
-			var light1 = createPointLight();
-			light1.position.set(0,200,20);
-			scene.add(light1);
-			var light0 = new THREE.AmbientLight( 0xffffff,0.25);
-			scene.add(light0);
-
-			// create main camera
-			camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			camera.position.set(0,50,0);
-			camera.lookAt(0,0,0);
-
-
-
-			// create the ground and the skybox
-			var ground = createGround('ground.png');
-			scene.add(ground);
-			var skybox = createSkyBox('sky_texture.png',1);
-			scene.add(skybox);
-
-			//create the cloud
-			initCloud();
-			var sun = createSun();
-			scene.add(sun);
-
-			// create the avatar
-			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			initDove();
-			//avatar = createAvatar();
-			//avatar.translateY(20);
-			avatarCam.translateY(-4);
-			avatarCam.translateZ(3);
-			//scene.add(avatar);
-			gameState.camera = avatarCam;
-
-			edgeCam = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 0.1, 1000 );
-      			edgeCam.position.set(20,20,10);
-			addCoins();
-
-			//playGameMusic();
-
-	}
-
-
-	function randN(n){
-		return Math.random()*n;
-	}
-
-	/* We don't do much here, but we could do more!
-	*/
-	function initScene(){
-		//scene = new THREE.Scene();
-    var scene = new Physijs.Scene();
-		return scene;
-	}
-
-  function initPhysijs(){
+	function initPhysijs() {
     Physijs.scripts.worker = '/js/physijs_worker.js';
     Physijs.scripts.ammo = '/js/ammo.js';
   }
-	/*
-		The renderer needs a size and the actual canvas we draw on
-		needs to be added to the body of the webpage. We also specify
-		that the renderer will be computing soft shadows
-	*/
-	function initRenderer(){
+
+	function initScene(){
+    scene = new Physijs.Scene();
+	}
+
+	function initRenderer() {
 		renderer = new THREE.WebGLRenderer();
-		renderer.setSize( window.innerWidth, window.innerHeight-50 );
+		renderer.setSize( window.innerWidth, window.innerHeight - 50 );
 		document.body.appendChild( renderer.domElement );
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	}
 
+	function createMainScene(){
+		setEnvironment();
+		setLights();
+		setMusic();
+		setCameras();
+		setFlightCamera();
+	}
 
-	function createPointLight(){
+	function setEnvironment() {
+		var skybox = createSkyBall( 'sky_texture.png' );
+		var ground = createGround( 'ground.png' );
+		var sun = createSun();
+
+		addCoins( 10 );
+		addClouds( 10 );
+
+		scene.add( skybox );
+		scene.add( ground );
+		scene.add( sun );
+	}
+
+	function setLights() {
+		var ambientLight = new THREE.AmbientLight( 0xffffff, 0.25 );
+		var pointLight1 = createPointLight();
+		pointLight1.position.set( 0, 200, 20 );
+
+		scene.add( ambientLight );
+		scene.add( pointLight1 );
+	}
+
+	function setMusic() {
+		//playGameMusic();
+	}
+
+	function setCameras() {
+		// do we need this camera? Should we delete it?
+		// camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		// camera.position.set(0,50,0);
+		// camera.lookAt(0,0,0);
+
+		edgeCam = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		edgeCam.position.set(20,20,10);
+	}
+
+	function setFlightCamera() {
+		flightCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		flightCamera.position.set(0, 6 , -15);
+		flightCamera.lookAt(0,0,0);
+
+		flightControls = new THREE.FlyControls( flightCamera );
+		flightControls.movementSpeed = 10;
+		flightControls.rollSpeed = Math.PI / 24;
+		flightControls.autoForward = true;
+		flightControls.dragToLook = false;
+
+		gameState.camera = flightCamera;
+		scene.add(flightCamera);
+
+		addDove();
+	}
+
+	function randN( n ) {
+		return Math.random() * n;
+	}
+
+	function createSkyBall(image){
+		var geometry = new THREE.SphereGeometry(160, 160, 160);
+		var texture = new THREE.TextureLoader().load( '../images/' + image);
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		var material = new THREE.MeshLambertMaterial({ color: 0xffffff,  map: texture ,side:THREE.DoubleSide});
+		var mesh = new THREE.Mesh( geometry, material, 0 );
+		mesh.receiveShadow = false;
+
+		return mesh
+	}
+
+	function createGround(image) {
+		var geometry = new THREE.PlaneGeometry( 360, 360, 256 );
+		var texture = new THREE.TextureLoader().load( '../images/' + image );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 15, 15 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture, side: THREE.DoubleSide } );
+		var pmaterial = new Physijs.createMaterial( material, 0.9, 0.5 );
+		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
+		mesh.receiveShadow = true;
+		mesh.rotateX( Math.PI / 2 );
+
+		return mesh;
+	}
+
+	function createSun(){
+		var geometry = new THREE.SphereGeometry( 5, 10, 10 );
+		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 20, 60, 10 );
+
+		return mesh;
+	}
+
+	function createPointLight() {
 		var light;
-		light = new THREE.PointLight( 0xffffff);
+		light = new THREE.PointLight( 0xffffff );
 		light.castShadow = true;
-		//Set up shadow properties for the light
 		light.shadow.mapSize.width = 2048;  // default
 		light.shadow.mapSize.height = 2048; // default
 		light.shadow.camera.near = 0.5;       // default
 		light.shadow.camera.far = 500      // default
+
 		return light;
 	}
 
+	function createCoin() {
+		var geometry = new THREE.TorusGeometry( 1, 0.2, 32, 32 );
+		var material = new THREE.MeshLambertMaterial( { 0xff0000: 0xff0000 } );
+		var pmaterial = new Physijs.createMaterial( material, 0.9, 0.95 );
+    var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
+		mesh.setDamping( 0.1, 0.1 );
+		mesh.castShadow = true;
 
-	/*function create
-	var geometry = new THREE.ConeBufferGeometry( 5, 20, 32 );
-	var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-	var cone = new THREE.Mesh( geometry, material );
-	scene.add( cone );
-	*/
-
-	function createGround(image){
-		// creating a textured plane which receives shadows
-		var geometry = new THREE.PlaneGeometry( 360, 360, 256 );
-		var texture = new THREE.TextureLoader().load( '../images/'+image );
-		texture.wrapS = THREE.RepeatWrapping;
-		texture.wrapT = THREE.RepeatWrapping;
-		texture.repeat.set( 15, 15 );
-		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
-		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
-		//var mesh = new THREE.Mesh( geometry, material );
-		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
-
-		mesh.receiveShadow = true;
-
-		mesh.rotateX(Math.PI/2);
-		return mesh
-		// we need to rotate the mesh 90 degrees to make it horizontal not vertical
+		return mesh;
 	}
 
-
-
-	function createSkyBox(image,k){
-		// creating a textured plane which receives shadows
-		var geometry = new THREE.SphereGeometry( 160, 160, 160 );
-		var texture = new THREE.TextureLoader().load( '../images/'+image );
-		texture.wrapS = THREE.RepeatWrapping;
-		texture.wrapT = THREE.RepeatWrapping;
-		texture.repeat.set( k, k );
-		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
-		//var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
-		//var mesh = new THREE.Mesh( geometry, material );
-		var mesh = new THREE.Mesh( geometry, material, 0 );
-
-		mesh.receiveShadow = false;
-
-
-		return mesh
-		// we need to rotate the mesh 90 degrees to make it horizontal not vertical
-
-
-	}
-
-	function addCoins(){
-		for(i=0;i<10;i++){
-			var coin = createCoins();
-			coin.position.set(randN(160)-80,30,randN(160)-80);
-			scene.add(coin);
+	function addCoins( n ) {
+		for(i=0; i <= n; i++) {
+			var coin = createCoin();
+			coin.position.set( randN(160) - 80, 30, randN(160) - 80 );
+			scene.add( coin );
 
 			coin.addEventListener( 'collision',
 				function( other_object, relative_velocity, relative_rotation, contact_normal ) {
-					if (other_object==avatar){
+					if ( other_object == avatar ) {
 						this.position.y = this.position.y - 100;
 						this.__dirtyPosition = true;
 					}
@@ -196,211 +186,115 @@ The user flies a bird through the sky
 			)
 		}
 	}
-	function createCoins(){
-				var geometry = new THREE.TorusGeometry( 1,0.2,32,32);
-				var material = new THREE.MeshLambertMaterial( { 0xff0000: 0xff0000} );
-				var pmaterial = new Physijs.createMaterial(material,0.9,0.95);
-    		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
-				mesh.setDamping(0.1,0.1);
-				mesh.castShadow = true;
-				scene.add( mesh );
-				return mesh;
-	}
-	function createSun(){
-		var geometry1 = new THREE.SphereGeometry( 5, 10, 10 );
-		var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-		var sphere1 = new THREE.Mesh( geometry1, material );
-		sphere1.position.set(20, 60, 10);
-		return sphere1;
+
+	function addClouds( n ) {
+		var loader = new THREE.OBJLoader();
+		loader.load( "../models/cloud.obj" ,
+			function ( obj ) {
+				console.log("loading cloud file");
+				console.dir(obj);
+				cloud = obj;
+
+				var geometry = cloud.children[0].geometry;
+				var material = new THREE.MeshLambertMaterial( { color: 0x1e90ff } );
+
+
+				for(i = 0; i < n; i++) {
+					cloud = new Physijs.BoxMesh( geometry, material, 0 );
+					cloud.position.set( randN( 160 ) -80, 40, randN( 160 ) - 80 );
+					scene.add( cloud );
+
+					cloud.addEventListener( 'collision',
+						function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+							if ( other_object == avatar ) {
+								this.position.y = this.position.y - 100;
+								this.__dirtyPosition = true;
+							}
+						}
+					)
+				}
+				cloud.castShadow = true;
+				cloud.material.color.b = 2;
+
+				console.log( "just added cloud" );
+			},
+
+			function( xhr ) {
+				console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+			},
+
+			function( err ) {
+				console.log( "error in loading: " + err );
+			}
+		)
 	}
 
-	function initDove() {
+	function addDove() {
 			var loader = new THREE.OBJLoader();
-			loader.load("../models/dove.obj",
+			loader.load( "../models/dove.obj",
 					function ( obj ) {
-						console.log("loading dove.obj file");
-						dove = obj;
+						console.log( "loading dove.obj file" );
 
-						var geometry = dove.children[1].geometry;
-						var material = dove.children[1].material;
-						dove = new Physijs.BoxMesh(geometry, material);
+						var geometry = obj.children[1].geometry;
+						var material = obj.children[1].material;
+						dove = new Physijs.BoxMesh( geometry, material );
 
-						avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-						gameState.camera = avatarCam;
-
-						avatarCam.position.set(0,6,-15);
-						avatarCam.lookAt(0,4,10);
-						dove.add(avatarCam);
-						dove.position.set(-40,20,-40);
+						dove.position.set( -40, 20, -40 );
 						dove.castShadow = false;
-						scene.add( dove  );
-						avatar=dove;
+						scene.add( dove );
+						avatar = dove;
 
-						console.log("dove has been added");
+						console.log( "dove has been added" );
 					},
 
-					function(xhr) {
-						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+					function( xhr ) {
+						console.log( ( xhr.loaded / xhr.total * 100) + '% loaded' );
 					},
 
-					function(err) {
-						console.log("error in loading: "+err);
+					function( err ) {
+						console.log( "error in loading: " + err );
 					}
 				)
 		}
-		function initCloud(){
-		var loader = new THREE.OBJLoader();
-		loader.load("../models/cloud.obj",
-				function ( obj) {
-					console.log("loading cloud file");
-					console.dir(obj);
-					cloud = obj;
-
-					var geometry = cloud.children[0].geometry;
-					var material = new THREE.MeshLambertMaterial( {color: 0x1e90ff} );
-
-
-					for(i=0;i<10;i++){
-						cloud = new Physijs.BoxMesh(geometry,material,0);
-						cloud.position.set(randN(160)-80,40,randN(160)-80);
-						scene.add(cloud);
-
-						cloud.addEventListener( 'collision',
-							function( other_object, relative_velocity, relative_rotation, contact_normal ) {
-								if (other_object==avatar){
-									this.position.y = this.position.y - 100;
-									this.__dirtyPosition = true;
-								}
-							}
-						)
-					}
-					cloud.castShadow = true;
-					cloud.material.color.b=2;
-
-					console.log("just added cloud");
-				},
-
-				function(xhr){
-					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-				},
-
-				function(err){
-					console.log("error in loading: "+err);
-				}
-			)
-		}
-
-
-
 
 	var clock;
 
-	function initControls(){
+	function initControls() {
 		// here is where we create the eventListeners to respond to operations
+		//create a clock for the time-based animation ...
+		clock = new THREE.Clock();
+		clock.start();
 
-		  //create a clock for the time-based animation ...
-			clock = new THREE.Clock();
-			clock.start();
-
-			window.addEventListener( 'keydown', keydown);
-			window.addEventListener( 'keyup',   keyup );
+		//window.addEventListener( 'keydown', keydown );
+		//window.addEventListener( 'keyup',   keyup );
   }
 
-	function keydown(event){
-		console.log("Keydown:"+event.key);
-		//console.dir(event);
-		// this is the regular scene
-		switch (event.key){
-			// change the way the avatar is moving
-			case "w": controls.fwd = true;  break;
-			case "s": controls.bwd = true; break;
-			case "a": controls.left = true; break;
-			case "d": controls.right = true; break;
-			case "z": controls.up = true; break;
-			case "x": controls.down = true; break;
-			case "m": controls.speed = 30; break;
-      case " ": controls.fly = true; break;
-    	case "r": controls.reset = true; break;
+	// function keydown( event ){
+	// 	console.log( "Keydown:" + event.key );
+	//
+	// 	switch ( event.key ) {
+	// 		case "1": gameState.camera = camera; break;
+	// 		case "2": gameState.camera = avatarCam; break;
+	// 	}
+	// }
 
-
-			// switch cameras
-			case "1": gameState.camera = camera; break;
-			case "2": gameState.camera = avatarCam; break;
-
-			// move the camera around, relative to the avatar
-			case "ArrowLeft": avatarCam.translateY(1);break;
-			case "ArrowRight": avatarCam.translateY(-1);break;
-			case "ArrowUp": avatarCam.translateZ(-1);break;
-			case "ArrowDown": avatarCam.translateZ(1);break;
-			case "q": avatarCam.rotateY(0.5) = true; break;
-			case "e": avatarCam.rotateY(-0.5) = true; break;
-		}
-
-	}
-
-	function keyup(event){
-		//console.log("Keydown:"+event.key);
-		//console.dir(event);
-		switch (event.key){
-			case "w": controls.fwd   = false;  break;
-			case "s": controls.bwd   = false; break;
-			case "a": controls.left  = false; break;
-			case "d": controls.right = false; break;
-			case "z": controls.up    = false; break;
-			case "x": controls.down  = false; break;
-			case "m": controls.speed = 10; break;
-      case " ": controls.fly = false; break;
-    	case "r": controls.reset = false; break;
-		}
-	}
-
-
-
-  function updateAvatar(){
-
-		var forward = avatar.getWorldDirection();
-
-		if (controls.fwd){
-			avatar.setLinearVelocity(forward.multiplyScalar(controls.speed));
-		} else if (controls.bwd){
-			avatar.setLinearVelocity(forward.multiplyScalar(-controls.speed));
-		} else {
-			var velocity = avatar.getLinearVelocity();
-			velocity.x=velocity.z=0;
-			avatar.setLinearVelocity(velocity); //stop the xz motion
-		}
-
-    if (controls.fly){
-      avatar.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
-    }
-
-		if (controls.left){
-			avatar.setAngularVelocity(new THREE.Vector3(0,controls.speed*0.1,0));
-		} else if (controls.right){
-			avatar.setAngularVelocity(new THREE.Vector3(0,-controls.speed*0.1,0));
-		}
-
-    if (controls.reset){
-      	avatar.__dirtyRotation = true;
-				avatar.rotation.set(0,0,0);
-				avatar.__dirtyPosition = true;
-				avatar.position.set(-40,20,-40);
-				avatarCam.lookAt(0,4,10);
-				gameState.scene = 'main';
-    }
-		avatar.material.color.b=3;
-  }
-
-
-
-
-
+	// function keyup( event ) {
+	// 	switch ( event.key ){
+	//
+	// 	}
+	// }
 
 	function animate() {
+		var delta = clock.getDelta();
+		flightControls.update(delta);
+
+		if ( dove && flightCamera ) {
+			flightCamera.add( dove );
+			dove.position.set( 0, -4, -6 );
+			dove.lookAt( 0, 0, -20 );
+		}
 
 		requestAnimationFrame( animate );
-
-
 		switch(gameState.scene) {
 			case "start":
 				renderer.render(startScene, startCamera);
@@ -413,9 +307,10 @@ The user flies a bird through the sky
 				break;
 
 			case "main":
-				updateAvatar();
-				edgeCam.lookAt(avatar.position);
-	    			scene.simulate();
+				if (avatar) {
+					edgeCam.lookAt(avatar.position);
+	    		scene.simulate();
+				}
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
 				}
@@ -423,7 +318,5 @@ The user flies a bird through the sky
 
 			default:
 			  console.log("don't know the scene "+gameState.scene);
-
 		}
-
 	}
