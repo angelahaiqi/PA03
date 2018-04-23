@@ -7,7 +7,7 @@ The user flies a bird through the sky
 	// in the animation code
 	var scene, renderer;  // all threejs programs need these
 	var camera, avatarCam, edgeCam;  // we have two cameras in the main scene
-	var avatar; var dove;
+	var avatar; var dove; var building;
 	// here are some mesh objects ...
 
 	// var controls =
@@ -61,6 +61,7 @@ The user flies a bird through the sky
 
 		addCoins( 10 );
 		addClouds( 10 );
+		addBuilding( 20 );
 
 		scene.add( skybox );
 		scene.add( ground );
@@ -217,6 +218,38 @@ The user flies a bird through the sky
 				cloud.material.color.b = 2;
 
 				console.log( "just added cloud" );
+			},
+
+			function( xhr ) {
+				console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+			},
+
+			function( err ) {
+				console.log( "error in loading: " + err );
+			}
+		)
+	}
+	function addBuilding( n ) {
+		var loader = new THREE.OBJLoader();
+		loader.load( "../models/2.obj" ,
+			function ( obj ) {
+				console.log("loading building file");
+				console.dir(obj);
+				building = obj;
+
+				var geometry = building.children[0].geometry;
+				var material = new THREE.MeshLambertMaterial( { color: 0x1e90ff } );
+
+				for(i = 0; i < n; i++) {
+					building = new Physijs.BoxMesh( geometry, material, 0 );
+					building.position.set( randN( 160 ) -80, 0, randN( 160 ) - 80 );
+					scene.add( building );
+
+
+				}
+				//building.material.color.b = 2;
+
+				console.log( "just added buildings" );
 			},
 
 			function( xhr ) {
