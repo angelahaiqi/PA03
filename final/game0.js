@@ -163,7 +163,7 @@ The user flies a bird through the sky
 		var geometry = new THREE.TorusGeometry( 1, 0.2, 32, 32 );
 		var material = new THREE.MeshLambertMaterial( { 0xff0000: 0xff0000 } );
 		var pmaterial = new Physijs.createMaterial( material, 0.9, 0.95 );
-    var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
+   		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
 		mesh.setDamping( 0.1, 0.1 );
 		mesh.castShadow = true;
 
