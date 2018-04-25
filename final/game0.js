@@ -18,21 +18,21 @@ The user flies a bird through the sky
 	var gameState =
 	     {scene:'main', camera:'none' }
 
-  init(); //
+  	init(); //
 	initControls();
 	animate();  // start the animation loop!
 
 	function init(){
-    initPhysijs();
+   		initPhysijs();
 		initScene();
 		initRenderer();
 		createMainScene();
 	}
 
 	function initPhysijs() {
-    Physijs.scripts.worker = '/js/physijs_worker.js';
-    Physijs.scripts.ammo = '/js/ammo.js';
-  }
+   		Physijs.scripts.worker = '/js/physijs_worker.js';
+    		Physijs.scripts.ammo = '/js/ammo.js';
+  	}
 
 	function initScene(){
     scene = new Physijs.Scene();
@@ -237,8 +237,9 @@ The user flies a bird through the sky
 				console.dir(obj);
 				building = obj;
 
+				var texture = new THREE.TextureLoader().load( 'skyscraper.jpg' );
 				var geometry = building.children[0].geometry;
-				var material = new THREE.MeshLambertMaterial( { color: 0x1e90ff } );
+				var material = new THREE.MeshLambertMaterial( { map: texture } );
 
 				for(i = 0; i < n; i++) {
 					building = new Physijs.BoxMesh( geometry, material, 0 );
@@ -263,32 +264,32 @@ The user flies a bird through the sky
 	}
 
 	function addDove() {
-			var loader = new THREE.OBJLoader();
-			loader.load( "../models/dove.obj",
-					function ( obj ) {
-						console.log( "loading dove.obj file" );
+		var loader = new THREE.OBJLoader();
+		loader.load( "../models/dove.obj",
+		function ( obj ) {
+			console.log( "loading dove.obj file" );
 
-						var geometry = obj.children[1].geometry;
-						var material = obj.children[1].material;
-						dove = new Physijs.BoxMesh( geometry, material );
+			var geometry = obj.children[1].geometry;
+			var material = obj.children[1].material;
+			dove = new Physijs.BoxMesh( geometry, material );
 
-						dove.position.set( -40, 20, -40 );
-						dove.castShadow = false;
-						scene.add( dove );
-						avatar = dove;
+			dove.position.set( -40, 20, -40 );
+			dove.castShadow = false;
+			scene.add( dove );
+			avatar = dove;
 
-						console.log( "dove has been added" );
-					},
+			console.log( "dove has been added" );
+		},
 
-					function( xhr ) {
-						console.log( ( xhr.loaded / xhr.total * 100) + '% loaded' );
-					},
+		function( xhr ) {
+			console.log( ( xhr.loaded / xhr.total * 100) + '% loaded' );
+		},
 
-					function( err ) {
-						console.log( "error in loading: " + err );
-					}
-				)
+		function( err ) {
+			console.log( "error in loading: " + err );
 		}
+		)
+	}
 
 	var clock;
 
