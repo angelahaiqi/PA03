@@ -162,7 +162,7 @@ The user flies a bird through the sky
 
 	function createCoin() {
 		var geometry = new THREE.TorusGeometry( 1, 0.2, 32, 32 );
-		var material = new THREE.MeshLambertMaterial( { 0xff0000: 0xff0000 } );
+		var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
 		var pmaterial = new Physijs.createMaterial( material, 0.9, 0.95 );
    		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
 		mesh.setDamping( 0.1, 0.1 );
@@ -237,7 +237,10 @@ The user flies a bird through the sky
 				console.dir(obj);
 				building = obj;
 
-				var texture = new THREE.TextureLoader().load( 'skyscraper.jpg' );
+				var texture = new THREE.TextureLoader().load( '../images/skyscraper.jpg' );
+				texture.wrapS = THREE.RepeatWrapping;
+				texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set( 2, 2 );
 				var geometry = building.children[0].geometry;
 				var material = new THREE.MeshLambertMaterial( { map: texture } );
 
